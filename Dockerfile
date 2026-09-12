@@ -1,9 +1,14 @@
-FROM nanthakps/kpsmlx:heroku
+FROM nanthakps/kpsmlx
 
 WORKDIR /usr/src/app
 RUN chmod 777 /usr/src/app
 
-COPY . .
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade setuptools pip uv
+RUN uv pip install --system --no-cache pymediainfo pyaes
 
-CMD ["bash", "start.sh"]
+COPY requirements.txt .
+RUN uv pip install --system --no-cache -r requirements.txt
+
+COPY . .
+
+ENTRYPOINT ["bash", "start.sh"]
